@@ -25,9 +25,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
 
     async def connect(self):
         user = self.scope.get("user")
-        self.conversation_id = self.scope["url_route"]["kwargs"].get(
-            "conversation_id"
-        )
+        self.conversation_id = self.scope["url_route"]["kwargs"].get("conversation_id")
 
         if (
             user is None
@@ -59,13 +57,9 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
     async def disconnect(self, close_code):
         user = self.scope.get("user")
         if self.group_name:
-            await self.channel_layer.group_discard(
-                self.group_name, self.channel_name
-            )
+            await self.channel_layer.group_discard(self.group_name, self.channel_name)
         if user and getattr(user, "is_authenticated", False):
-            await database_sync_to_async(presence.clear_viewing_conversation)(
-                user.id
-            )
+            await database_sync_to_async(presence.clear_viewing_conversation)(user.id)
             await database_sync_to_async(presence.set_offline)(user.id)
             if self.group_name:
                 await self._broadcast_presence(online=False)
@@ -199,9 +193,9 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         # Mark delivered for the recipient quietly; notify peers separately.
         user = self.scope.get("user")
         if user and message.get("sender") != user.username:
-            status_obj = await database_sync_to_async(
-                services.mark_message_delivered
-            )(recipient=user, message_id=message["id"])
+            status_obj = await database_sync_to_async(services.mark_message_delivered)(
+                recipient=user, message_id=message["id"]
+            )
             if status_obj is not None:
                 await self.channel_layer.group_send(
                     self.group_name,
@@ -264,9 +258,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
             user = User.objects.get(pk=user_id)
         except User.DoesNotExist:
             return False
-        return selectors.user_is_member(
-            conversation_id=conversation_id, user=user
-        )
+        return selectors.user_is_member(conversation_id=conversation_id, user=user)
 
     @database_sync_to_async
     def _serialize_message(self, message: Message) -> dict:

@@ -109,9 +109,7 @@ def test_cannot_edit_others_comment(api_client, user_a, user_b, public_post):
 
 
 def test_delete_comment_soft(api_client, user_b, public_post):
-    comment = Comment.objects.create(
-        author=user_b, post=public_post, content="Bye"
-    )
+    comment = Comment.objects.create(author=user_b, post=public_post, content="Bye")
     _auth(api_client, user_b)
     response = api_client.delete(f"/api/v1/comments/{comment.id}/")
     assert response.status_code == status.HTTP_204_NO_CONTENT
@@ -136,9 +134,7 @@ def test_reply_works(api_client, user_a, user_b, public_post):
 
 
 def test_reply_depth_restricted(api_client, user_a, user_b, public_post):
-    parent = Comment.objects.create(
-        author=user_a, post=public_post, content="Top"
-    )
+    parent = Comment.objects.create(author=user_a, post=public_post, content="Top")
     reply = Comment.objects.create(
         author=user_b, post=public_post, parent=parent, content="Nested"
     )
@@ -152,9 +148,7 @@ def test_reply_depth_restricted(api_client, user_a, user_b, public_post):
 
 
 def test_list_comments_includes_replies(api_client, user_a, user_b, public_post):
-    parent = Comment.objects.create(
-        author=user_a, post=public_post, content="Parent"
-    )
+    parent = Comment.objects.create(author=user_a, post=public_post, content="Parent")
     Comment.objects.create(
         author=user_b, post=public_post, parent=parent, content="Child"
     )

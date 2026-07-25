@@ -215,7 +215,9 @@ CELERY_BEAT_SCHEDULE = {
 AUTH_USER_MODEL = "accounts.User"
 
 AUTH_PASSWORD_VALIDATORS = [
-    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
+    {
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"
+    },
     {
         "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
         "OPTIONS": {"min_length": 8},
@@ -247,15 +249,11 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
-    "DEFAULT_PERMISSION_CLASSES": (
-        "rest_framework.permissions.IsAuthenticated",
-    ),
+    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 20,
-    "DEFAULT_RENDERER_CLASSES": (
-        "rest_framework.renderers.JSONRenderer",
-    ),
+    "DEFAULT_RENDERER_CLASSES": ("rest_framework.renderers.JSONRenderer",),
     "DEFAULT_THROTTLE_CLASSES": (
         "rest_framework.throttling.AnonRateThrottle",
         "rest_framework.throttling.UserRateThrottle",
@@ -296,10 +294,16 @@ SPECTACULAR_SETTINGS = {
         {"name": "comments", "description": "Comments and replies"},
         {"name": "reactions", "description": "Post and comment reactions"},
         {"name": "messages", "description": "Direct messaging between connections"},
-        {"name": "notifications", "description": "In-app notifications and preferences"},
+        {
+            "name": "notifications",
+            "description": "In-app notifications and preferences",
+        },
         {"name": "moderation", "description": "Reports, blocks, and staff moderation"},
         {"name": "privacy", "description": "Privacy and visibility settings"},
-        {"name": "account", "description": "Account deletion, restore, and data export"},
+        {
+            "name": "account",
+            "description": "Account deletion, restore, and data export",
+        },
         {"name": "admin", "description": "Admin dashboard operations and analytics"},
     ],
 }
@@ -336,9 +340,7 @@ WHATSAPP_API_KEY = env("WHATSAPP_API_KEY", default="")
 EMAIL_VERIFICATION_TOKEN_MAX_AGE = env.int(
     "EMAIL_VERIFICATION_TOKEN_MAX_AGE", default=60 * 60 * 48
 )
-PASSWORD_RESET_TOKEN_MAX_AGE = env.int(
-    "PASSWORD_RESET_TOKEN_MAX_AGE", default=60 * 60
-)
+PASSWORD_RESET_TOKEN_MAX_AGE = env.int("PASSWORD_RESET_TOKEN_MAX_AGE", default=60 * 60)
 
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"

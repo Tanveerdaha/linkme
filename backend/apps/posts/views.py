@@ -154,13 +154,13 @@ class PostDetailView(APIView):
 
     def patch(self, request, post_id):
         post = get_object_or_404(
-            Post.objects.select_related("author", "author__profile").prefetch_related("media"),
+            Post.objects.select_related("author", "author__profile").prefetch_related(
+                "media"
+            ),
             pk=post_id,
         )
         if post.status == Post.Status.DELETED:
-            return Response(
-                {"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND
-            )
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
         self.check_object_permissions(request, post)
 
         serializer = PostUpdateSerializer(data=request.data, partial=True)

@@ -17,8 +17,7 @@ def is_blocked(*, user_a, user_b) -> bool:
     if user_a.id == user_b.id:
         return False
     return BlockedUser.objects.filter(
-        Q(blocker=user_a, blocked_user=user_b)
-        | Q(blocker=user_b, blocked_user=user_a)
+        Q(blocker=user_a, blocked_user=user_b) | Q(blocker=user_b, blocked_user=user_a)
     ).exists()
 
 

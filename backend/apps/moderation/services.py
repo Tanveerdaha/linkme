@@ -126,13 +126,21 @@ def _resolve_report_target(*, content_type: str, object_id: str):
         from apps.comments.models import Comment
 
         comment = get_object_or_404(Comment, pk=oid)
-        return comment.author, ContentType.objects.get_for_model(Comment), str(comment.id)
+        return (
+            comment.author,
+            ContentType.objects.get_for_model(Comment),
+            str(comment.id),
+        )
 
     if label == Report.ContentTypeChoice.MESSAGE:
         from apps.messaging.models import Message
 
         message = get_object_or_404(Message, pk=oid)
-        return message.sender, ContentType.objects.get_for_model(Message), str(message.id)
+        return (
+            message.sender,
+            ContentType.objects.get_for_model(Message),
+            str(message.id),
+        )
 
     raise ValidationError({"content_type": "Unsupported content type."})
 
@@ -202,9 +210,7 @@ def list_pending_reports(*, status: str | None = None):
     if status:
         qs = qs.filter(status=status)
     else:
-        qs = qs.filter(
-            status__in=[Report.Status.PENDING, Report.Status.UNDER_REVIEW]
-        )
+        qs = qs.filter(status__in=[Report.Status.PENDING, Report.Status.UNDER_REVIEW])
     return qs.order_by("created_at")
 
 
@@ -313,7 +319,9 @@ def _remove_content(*, target_type: str, target_id: str) -> None:
         raise ValidationError({"target_type": "Cannot remove this target type."})
 
 
-def _suspend_or_ban_user(*, target_id, action: str, reason: str, suspend_days: int | None):
+def _suspend_or_ban_user(
+    *, target_id, action: str, reason: str, suspend_days: int | None
+):
     user = get_object_or_404(User, pk=target_id)
     user.is_suspended = True
     user.suspension_reason = (reason or "").strip()

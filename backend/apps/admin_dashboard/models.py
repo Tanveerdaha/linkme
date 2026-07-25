@@ -151,9 +151,7 @@ class AdminExportRequest(models.Model):
         related_name="admin_exports",
     )
     export_type = models.CharField(max_length=32, choices=ExportType.choices)
-    format = models.CharField(
-        max_length=8, choices=Format.choices, default=Format.CSV
-    )
+    format = models.CharField(max_length=8, choices=Format.choices, default=Format.CSV)
     status = models.CharField(
         max_length=16,
         choices=Status.choices,

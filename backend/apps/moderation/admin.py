@@ -40,7 +40,14 @@ class ModerationActionAdmin(admin.ModelAdmin):
 class AuditLogAdmin(admin.ModelAdmin):
     list_display = ("action", "user", "object_type", "object_id", "created_at")
     list_filter = ("action",)
-    readonly_fields = ("user", "action", "object_type", "object_id", "metadata", "created_at")
+    readonly_fields = (
+        "user",
+        "action",
+        "object_type",
+        "object_id",
+        "metadata",
+        "created_at",
+    )
 
 
 @admin.register(DataExportRequest)

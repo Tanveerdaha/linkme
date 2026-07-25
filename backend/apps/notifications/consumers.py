@@ -39,9 +39,7 @@ class NotificationConsumer(AsyncJsonWebsocketConsumer):
 
     async def disconnect(self, close_code):
         if self.group_name:
-            await self.channel_layer.group_discard(
-                self.group_name, self.channel_name
-            )
+            await self.channel_layer.group_discard(self.group_name, self.channel_name)
 
     async def receive_json(self, content, **kwargs):
         user = self.scope.get("user")
@@ -55,9 +53,7 @@ class NotificationConsumer(AsyncJsonWebsocketConsumer):
                 return
             try:
                 await self._mark_read(user, note_id)
-                await self.send_json(
-                    {"type": "notification.read", "id": str(note_id)}
-                )
+                await self.send_json({"type": "notification.read", "id": str(note_id)})
                 count = await self._unread_count(user)
                 await self.send_json(
                     {"type": "notification.unread_count", "count": count}

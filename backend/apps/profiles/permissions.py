@@ -26,9 +26,7 @@ class IsOwner(BasePermission):
             return True
         owner = getattr(obj, "user", None)
         return bool(
-            request.user
-            and request.user.is_authenticated
-            and owner == request.user
+            request.user and request.user.is_authenticated and owner == request.user
         )
 
 

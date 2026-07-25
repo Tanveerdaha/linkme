@@ -6,7 +6,12 @@ from channels.testing import WebsocketCommunicator
 from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.tokens import AccessToken
 
-from apps.messaging.models import Conversation, ConversationMember, Message, MessageStatus
+from apps.messaging.models import (
+    Conversation,
+    ConversationMember,
+    Message,
+    MessageStatus,
+)
 from apps.network.models import Connection
 from config.asgi import application
 
@@ -168,9 +173,7 @@ async def test_ws_read_receipt(channel_layers, users):
     assert (await comm_b.connect())[0]
     await _recv_of_type(comm_a, "presence")
 
-    await comm_b.send_json_to(
-        {"type": "message.read", "message_id": str(message.id)}
-    )
+    await comm_b.send_json_to({"type": "message.read", "message_id": str(message.id)})
     event = await _recv_of_type(comm_a, "message.read")
     assert event["message_id"] == str(message.id)
 

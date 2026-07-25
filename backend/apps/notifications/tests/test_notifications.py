@@ -136,9 +136,7 @@ def test_message_creates_notification(user_a, user_b):
     )
     ConversationMember.objects.create(conversation=conversation, user=user_a)
     ConversationMember.objects.create(conversation=conversation, user=user_b)
-    send_message(
-        sender=user_a, conversation_id=conversation.id, content="Hello"
-    )
+    send_message(sender=user_a, conversation_id=conversation.id, content="Hello")
     assert Notification.objects.filter(
         recipient=user_b,
         notification_type=Notification.NotificationType.MESSAGE_RECEIVED,
@@ -157,9 +155,7 @@ def test_message_skipped_when_viewing(user_a, user_b):
     ConversationMember.objects.create(conversation=conversation, user=user_a)
     ConversationMember.objects.create(conversation=conversation, user=user_b)
     presence.set_viewing_conversation(user_b.id, conversation.id)
-    send_message(
-        sender=user_a, conversation_id=conversation.id, content="Seen"
-    )
+    send_message(sender=user_a, conversation_id=conversation.id, content="Seen")
     assert not Notification.objects.filter(
         notification_type=Notification.NotificationType.MESSAGE_RECEIVED
     ).exists()

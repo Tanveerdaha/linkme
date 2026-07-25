@@ -92,10 +92,9 @@ class LoginView(APIView):
         serializer = LoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         identifier = serializer.validated_data.get("login", "")
-        ip = (
-            (request.META.get("HTTP_X_FORWARDED_FOR") or "").split(",")[0].strip()
-            or request.META.get("REMOTE_ADDR", "")
-        )
+        ip = (request.META.get("HTTP_X_FORWARDED_FOR") or "").split(",")[
+            0
+        ].strip() or request.META.get("REMOTE_ADDR", "")
         user_agent = request.META.get("HTTP_USER_AGENT", "")
 
         from apps.accounts.security.login_protection import (

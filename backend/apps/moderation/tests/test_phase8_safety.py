@@ -176,7 +176,9 @@ def test_duplicate_report_prevention(api_client, user_a, user_b):
         "reason": "SPAM",
     }
     _auth(api_client, user_a)
-    assert api_client.post("/api/v1/reports/", payload, format="json").status_code == 201
+    assert (
+        api_client.post("/api/v1/reports/", payload, format="json").status_code == 201
+    )
     dup = api_client.post("/api/v1/reports/", payload, format="json")
     assert dup.status_code == 400
 
@@ -350,7 +352,9 @@ def test_upload_validation_rejects_bad_extension(api_client, user_a):
     from apps.media.validators import validate_media_file
     from django.core.exceptions import ValidationError
 
-    bad = SimpleUploadedFile("malware.exe", b"MZ\x90\x00", content_type="application/octet-stream")
+    bad = SimpleUploadedFile(
+        "malware.exe", b"MZ\x90\x00", content_type="application/octet-stream"
+    )
     with pytest.raises(ValidationError):
         validate_media_file(bad)
 

@@ -14,7 +14,11 @@ def log_audit(
     """Persist an audit log entry. Never raises to callers."""
     try:
         return AuditLog.objects.create(
-            user=user if user is not None and getattr(user, "is_authenticated", True) else None,
+            user=(
+                user
+                if user is not None and getattr(user, "is_authenticated", True)
+                else None
+            ),
             action=action,
             object_type=object_type or "",
             object_id=str(object_id) if object_id else "",

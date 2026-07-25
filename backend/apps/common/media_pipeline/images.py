@@ -52,7 +52,9 @@ def optimize_image_file(uploaded_file) -> tuple[ContentFile, str, int, int]:
             content_type = "image/webp"
         except Exception:
             buffer = io.BytesIO()
-            img.convert("RGB").save(buffer, format="JPEG", quality=JPEG_QUALITY, optimize=True)
+            img.convert("RGB").save(
+                buffer, format="JPEG", quality=JPEG_QUALITY, optimize=True
+            )
             ext = "jpg"
             content_type = "image/jpeg"
 

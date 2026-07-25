@@ -36,9 +36,7 @@ class PublicFeedView(APIView):
     def get(self, request):
         cursor = request.query_params.get("cursor")
         # Cache only the first page for anonymous visitors.
-        use_cache = not cursor and not getattr(
-            request.user, "is_authenticated", False
-        )
+        use_cache = not cursor and not getattr(request.user, "is_authenticated", False)
         if use_cache:
             cached = cache_feed(None)
             if cached is not None:

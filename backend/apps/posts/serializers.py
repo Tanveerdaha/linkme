@@ -135,8 +135,10 @@ class PostCreateSerializer(serializers.Serializer):
             if files:
                 payload["media"] = files
             data = payload
-        elif isinstance(data, dict) and "media" in data and not isinstance(
-            data.get("media"), (list, tuple)
+        elif (
+            isinstance(data, dict)
+            and "media" in data
+            and not isinstance(data.get("media"), (list, tuple))
         ):
             media = data.get("media")
             data = {**data, "media": [media] if media else []}

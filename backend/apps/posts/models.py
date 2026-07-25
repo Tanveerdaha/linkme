@@ -61,15 +61,14 @@ class Post(models.Model):
         super().clean()
         content = (self.content or "").strip()
         if len(content) > 5000:
-            raise ValidationError({"content": _("Content must be at most 5000 characters.")})
+            raise ValidationError(
+                {"content": _("Content must be at most 5000 characters.")}
+            )
 
     def save(self, *args, **kwargs):
         if self.content:
             self.content = self.content.strip()
-        if (
-            self.status == self.Status.PUBLISHED
-            and self.published_at is None
-        ):
+        if self.status == self.Status.PUBLISHED and self.published_at is None:
             self.published_at = timezone.now()
         super().save(*args, **kwargs)
 

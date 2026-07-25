@@ -91,7 +91,9 @@ def _comment_reaction_count(comment_id) -> int:
 
 
 @transaction.atomic
-def add_post_reaction(*, post_id, user, reaction_type: str = Reaction.ReactionType.HEART) -> dict:
+def add_post_reaction(
+    *, post_id, user, reaction_type: str = Reaction.ReactionType.HEART
+) -> dict:
     from apps.moderation.blocks import assert_not_blocked, assert_user_can_act
 
     assert_user_can_act(user)

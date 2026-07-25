@@ -34,10 +34,10 @@ _BASE_DIR = Path(__file__).resolve().parent.parent.parent
 _load_env_file(_BASE_DIR / ".env")
 
 _env = (
-    os.environ.get("ENVIRONMENT")
-    or os.environ.get("DJANGO_ENV")
-    or "development"
-).lower().strip()
+    (os.environ.get("ENVIRONMENT") or os.environ.get("DJANGO_ENV") or "development")
+    .lower()
+    .strip()
+)
 
 if _env in {"prod", "production"}:
     from config.settings.production import *  # noqa: F401,F403

@@ -63,12 +63,13 @@ def search_users(
     )
 
     # Also include simple icontains matches (usernames / partials FTS may miss).
-    icontains_q = Q(
-        user__username__icontains=query
-    ) | Q(user__first_name__icontains=query) | Q(
-        user__last_name__icontains=query
-    ) | Q(headline__icontains=query) | Q(bio__icontains=query) | Q(
-        location__icontains=query
+    icontains_q = (
+        Q(user__username__icontains=query)
+        | Q(user__first_name__icontains=query)
+        | Q(user__last_name__icontains=query)
+        | Q(headline__icontains=query)
+        | Q(bio__icontains=query)
+        | Q(location__icontains=query)
     )
 
     # Union-style: prefer ranked FTS results, then fill with icontains.
@@ -88,6 +89,8 @@ def search_users(
     from django.db.models import Case, IntegerField, When
 
     whens = [When(pk=pk, then=pos) for pos, pk in enumerate(ordered_ids)]
-    return qs.filter(pk__in=ordered_ids).annotate(
-        search_order=Case(*whens, output_field=IntegerField())
-    ).order_by("search_order")
+    return (
+        qs.filter(pk__in=ordered_ids)
+        .annotate(search_order=Case(*whens, output_field=IntegerField()))
+        .order_by("search_order")
+    )

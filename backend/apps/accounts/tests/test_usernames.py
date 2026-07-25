@@ -94,9 +94,7 @@ def test_bloom_add_and_exists(bloom):
 
 
 def test_signup_adds_username_to_bloom(api_client, bloom, monkeypatch):
-    monkeypatch.setattr(
-        "apps.accounts.services.get_username_bloom", lambda: bloom
-    )
+    monkeypatch.setattr("apps.accounts.services.get_username_bloom", lambda: bloom)
     payload = {
         "email": "bloomuser@example.com",
         "username": "bloomuser",
@@ -170,9 +168,7 @@ def test_profile_username_conflict(api_client, db):
         is_verified=True,
     )
     api_client.force_authenticate(user=user)
-    response = api_client.patch(
-        PROFILE_ME_URL, {"username": "Claimed"}, format="json"
-    )
+    response = api_client.patch(PROFILE_ME_URL, {"username": "Claimed"}, format="json")
     assert response.status_code == status.HTTP_400_BAD_REQUEST
 
 

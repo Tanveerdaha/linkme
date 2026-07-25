@@ -39,9 +39,7 @@ def analytics_overview() -> dict:
 
     posts = Post.objects.exclude(status=Post.Status.DELETED).count()
     comments = Comment.objects.filter(status=Comment.Status.ACTIVE).count()
-    connections = Connection.objects.filter(
-        status=Connection.Status.ACCEPTED
-    ).count()
+    connections = Connection.objects.filter(status=Connection.Status.ACCEPTED).count()
     pending_reports = Report.objects.filter(
         status__in=[Report.Status.PENDING, Report.Status.UNDER_REVIEW]
     ).count()
@@ -61,7 +59,9 @@ def analytics_trends(*, days: int = 14) -> dict:
     )
 
     def _daily_counts(qs, field="created_at"):
-        buckets = { (start + timedelta(days=i)).date().isoformat(): 0 for i in range(days) }
+        buckets = {
+            (start + timedelta(days=i)).date().isoformat(): 0 for i in range(days)
+        }
         for row in qs.filter(**{f"{field}__gte": start}).values_list(field, flat=True):
             key = row.date().isoformat()
             if key in buckets:
@@ -124,25 +124,21 @@ def list_users(*, params) -> QuerySet:
 
 def get_user_detail(user_id):
     user = (
-        User.objects.select_related("profile", "admin_role")
-        .filter(pk=user_id)
-        .first()
+        User.objects.select_related("profile", "admin_role").filter(pk=user_id).first()
     )
     if user is None:
         return None
 
-    posts_count = Post.objects.filter(author=user).exclude(
-        status=Post.Status.DELETED
-    ).count()
+    posts_count = (
+        Post.objects.filter(author=user).exclude(status=Post.Status.DELETED).count()
+    )
     reports_against = Report.objects.filter(reported_user=user).count()
     connections = Connection.objects.filter(
         Q(sender=user) | Q(receiver=user),
         status=Connection.Status.ACCEPTED,
     ).count()
     moderation_history = list(
-        ModerationAction.objects.filter(
-            target_type="USER", target_id=str(user.id)
-        )
+        ModerationAction.objects.filter(target_type="USER", target_id=str(user.id))
         .select_related("admin")
         .order_by("-created_at")[:20]
     )
@@ -167,9 +163,9 @@ def list_posts(*, params):
 
 
 def list_comments(*, params):
-    qs = Comment.objects.select_related(
-        "author", "author__profile", "post"
-    ).order_by("-created_at")
+    qs = Comment.objects.select_related("author", "author__profile", "post").order_by(
+        "-created_at"
+    )
     return filter_admin_comments(qs, params)
 
 

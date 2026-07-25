@@ -46,7 +46,9 @@ def get_network_suggestions(*, viewer, limit: int = 20) -> list[dict]:
         exclude_ids.add(sender_id if sender_id != viewer.id else receiver_id)
 
     recent_cutoff = timezone.now() - timedelta(days=30)
-    viewer_interests = set(viewer.profile.interests or []) if hasattr(viewer, "profile") else set()
+    viewer_interests = (
+        set(viewer.profile.interests or []) if hasattr(viewer, "profile") else set()
+    )
 
     qs = (
         Profile.objects.select_related("user")

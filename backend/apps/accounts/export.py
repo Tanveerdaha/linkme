@@ -63,7 +63,9 @@ def generate_and_store_export(export_request) -> None:
 
     try:
         data = export_user_data(export_request.user)
-        filename = f"linkme-export-{export_request.user.username}-{export_request.id}.zip"
+        filename = (
+            f"linkme-export-{export_request.user.username}-{export_request.id}.zip"
+        )
         export_request.file.save(filename, ContentFile(data), save=False)
         export_request.status = DataExportRequest.Status.READY
         export_request.completed_at = timezone.now()
@@ -73,9 +75,7 @@ def generate_and_store_export(export_request) -> None:
     except Exception as exc:  # noqa: BLE001
         export_request.status = DataExportRequest.Status.FAILED
         export_request.error_message = str(exc)[:500]
-        export_request.save(
-            update_fields=["status", "error_message"]
-        )
+        export_request.save(update_fields=["status", "error_message"])
         raise
 
 

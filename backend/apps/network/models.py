@@ -66,17 +66,13 @@ class Connection(models.Model):
             models.UniqueConstraint(
                 Least("sender", "receiver"),
                 Greatest("sender", "receiver"),
-                condition=Q(
-                    status__in=["PENDING", "ACCEPTED", "BLOCKED"]
-                ),
+                condition=Q(status__in=["PENDING", "ACCEPTED", "BLOCKED"]),
                 name="unique_active_connection_pair",
             ),
         ]
 
     def __str__(self) -> str:
-        return (
-            f"Connection({self.sender_id} → {self.receiver_id}, {self.status})"
-        )
+        return f"Connection({self.sender_id} → {self.receiver_id}, {self.status})"
 
     def clean(self):
         super().clean()

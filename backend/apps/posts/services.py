@@ -45,7 +45,13 @@ def list_author_posts(*, username: str, viewer):
 
 
 @transaction.atomic
-def create_post(*, author, content: str = "", visibility: str = Post.Visibility.PUBLIC, media_files=None) -> Post:
+def create_post(
+    *,
+    author,
+    content: str = "",
+    visibility: str = Post.Visibility.PUBLIC,
+    media_files=None,
+) -> Post:
     """Create a published post with optional media attachments."""
     assert_user_can_act(author)
     media_files = list(media_files or [])
@@ -53,11 +59,7 @@ def create_post(*, author, content: str = "", visibility: str = Post.Visibility.
 
     if visibility not in PHASE2_VISIBILITIES:
         raise ValidationError(
-            {
-                "visibility": (
-                    "Supported values: PUBLIC, PRIVATE, CONNECTIONS_ONLY."
-                )
-            }
+            {"visibility": ("Supported values: PUBLIC, PRIVATE, CONNECTIONS_ONLY.")}
         )
 
     if not content and not media_files:
@@ -102,7 +104,9 @@ def update_post(*, post: Post, actor, data: dict) -> Post:
     if "content" in data:
         content = (data["content"] or "").strip()
         if len(content) > 5000:
-            raise ValidationError({"content": "Content must be at most 5000 characters."})
+            raise ValidationError(
+                {"content": "Content must be at most 5000 characters."}
+            )
         # Content may become empty only if media remains.
         if not content and not post.media.exists():
             raise ValidationError(
@@ -115,11 +119,7 @@ def update_post(*, post: Post, actor, data: dict) -> Post:
         visibility = data["visibility"]
         if visibility not in PHASE2_VISIBILITIES:
             raise ValidationError(
-                {
-                    "visibility": (
-                        "Only PUBLIC and PRIVATE are supported in this phase."
-                    )
-                }
+                {"visibility": ("Only PUBLIC and PRIVATE are supported in this phase.")}
             )
         post.visibility = visibility
         fields.append("visibility")

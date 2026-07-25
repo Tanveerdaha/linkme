@@ -15,9 +15,7 @@ def filter_posts_for_viewer(queryset: QuerySet, viewer) -> QuerySet:
     Authenticated: public published + connections-only (if connected) + own posts.
     Excludes blocked users and deleted authors.
     """
-    base = queryset.exclude(status=Post.Status.DELETED).exclude(
-        author__is_deleted=True
-    )
+    base = queryset.exclude(status=Post.Status.DELETED).exclude(author__is_deleted=True)
 
     if viewer is None or not getattr(viewer, "is_authenticated", False):
         return base.filter(

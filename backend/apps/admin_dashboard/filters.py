@@ -23,9 +23,7 @@ def filter_admin_users(queryset: QuerySet, params) -> QuerySet:
 
     status = (params.get("status") or "").upper()
     if status == "ACTIVE":
-        queryset = queryset.filter(
-            is_active=True, is_deleted=False, is_suspended=False
-        )
+        queryset = queryset.filter(is_active=True, is_deleted=False, is_suspended=False)
     elif status == "SUSPENDED":
         queryset = queryset.filter(is_suspended=True, is_deleted=False)
     elif status == "DELETED":

@@ -71,9 +71,7 @@ def test_post_returns_reaction_and_comment_counts(
     )
     Comment.objects.create(author=user_b, post=public_post, content="One")
     Comment.objects.create(author=user_a, post=public_post, content="Two")
-    deleted = Comment.objects.create(
-        author=user_a, post=public_post, content="Gone"
-    )
+    deleted = Comment.objects.create(author=user_a, post=public_post, content="Gone")
     deleted.status = Comment.Status.DELETED
     deleted.save(update_fields=["status", "updated_at"])
 

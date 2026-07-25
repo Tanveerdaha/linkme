@@ -76,7 +76,9 @@ class ReportCreateView(APIView):
     def post(self, request):
         serializer = CreateReportSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        report = services.create_report(reporter=request.user, **serializer.validated_data)
+        report = services.create_report(
+            reporter=request.user, **serializer.validated_data
+        )
         return Response(
             ReportSerializer(report).data,
             status=status.HTTP_201_CREATED,

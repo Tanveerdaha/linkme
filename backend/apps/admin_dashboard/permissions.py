@@ -2,7 +2,11 @@
 
 from rest_framework.permissions import BasePermission
 
-from apps.admin_dashboard.models import AdminPermissionCode, AdminRole, ROLE_DEFAULT_PERMISSIONS
+from apps.admin_dashboard.models import (
+    AdminPermissionCode,
+    AdminRole,
+    ROLE_DEFAULT_PERMISSIONS,
+)
 
 
 def user_is_admin(user) -> bool:

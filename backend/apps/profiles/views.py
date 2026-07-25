@@ -13,7 +13,11 @@ from apps.profiles import recommendations
 from apps.profiles import search as search_svc
 from apps.profiles import services
 from apps.profiles.pagination import UserSearchPagination
-from apps.profiles.permissions import CanViewProfileContent, IsAuthenticatedUser, IsOwner
+from apps.profiles.permissions import (
+    CanViewProfileContent,
+    IsAuthenticatedUser,
+    IsOwner,
+)
 from apps.profiles.serializers import (
     ActivityItemSerializer,
     MeProfileSerializer,
@@ -116,9 +120,7 @@ class ProfileActivityView(APIView):
         profile = services.get_public_profile(username, viewer=request.user)
         if getattr(profile, "_limited_view", False):
             return Response([])
-        items = activity_svc.get_user_activity(
-            user=profile.user, viewer=request.user
-        )
+        items = activity_svc.get_user_activity(user=profile.user, viewer=request.user)
         return Response(ActivityItemSerializer(items, many=True).data)
 
 
@@ -130,16 +132,25 @@ class UserSearchView(APIView):
         parameters=[
             OpenApiParameter(name="q", type=str, location=OpenApiParameter.QUERY),
             OpenApiParameter(
-                name="location", type=str, location=OpenApiParameter.QUERY, required=False
+                name="location",
+                type=str,
+                location=OpenApiParameter.QUERY,
+                required=False,
             ),
             OpenApiParameter(
-                name="interest", type=str, location=OpenApiParameter.QUERY, required=False
+                name="interest",
+                type=str,
+                location=OpenApiParameter.QUERY,
+                required=False,
             ),
             OpenApiParameter(
                 name="page", type=int, location=OpenApiParameter.QUERY, required=False
             ),
             OpenApiParameter(
-                name="page_size", type=int, location=OpenApiParameter.QUERY, required=False
+                name="page_size",
+                type=int,
+                location=OpenApiParameter.QUERY,
+                required=False,
             ),
         ],
         responses={200: UserSearchResultSerializer(many=True)},

@@ -25,7 +25,5 @@ class IsOwner(BasePermission):
             # Allow comparing User instances directly.
             owner = obj
         return bool(
-            request.user
-            and request.user.is_authenticated
-            and owner == request.user
+            request.user and request.user.is_authenticated and owner == request.user
         )

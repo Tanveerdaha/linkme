@@ -29,7 +29,14 @@ class UserAdmin(DjangoUserAdmin):
         "is_staff",
         "is_superuser",
     )
-    search_fields = ("email", "username", "first_name", "last_name", "google_id", "phone_number")
+    search_fields = (
+        "email",
+        "username",
+        "first_name",
+        "last_name",
+        "google_id",
+        "phone_number",
+    )
     readonly_fields = ("id", "created_at", "updated_at", "last_login")
 
     fieldsets = (

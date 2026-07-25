@@ -29,7 +29,9 @@ def generate_admin_export(export_id: str) -> str:
     export.save(update_fields=["status"])
 
     try:
-        rows = _collect_rows(export, User, Report, ModerationAction, AuditLog, selectors)
+        rows = _collect_rows(
+            export, User, Report, ModerationAction, AuditLog, selectors
+        )
         if export.format == AdminExportRequest.Format.JSON:
             payload = json.dumps(rows, indent=2, default=str).encode("utf-8")
             ext = "json"

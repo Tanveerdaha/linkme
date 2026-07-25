@@ -121,9 +121,7 @@ class CommentDetailView(APIView):
     def patch(self, request, comment_id):
         comment = self.get_object(comment_id)
         if comment.status == Comment.Status.DELETED:
-            return Response(
-                {"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND
-            )
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
         self.check_object_permissions(request, comment)
         serializer = CommentWriteSerializer(data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)

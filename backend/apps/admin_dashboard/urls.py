@@ -27,7 +27,9 @@ urlpatterns = [
     ),
     # Users
     path("users/", views.AdminUserListView.as_view(), name="users"),
-    path("users/<uuid:user_id>/", views.AdminUserDetailView.as_view(), name="user-detail"),
+    path(
+        "users/<uuid:user_id>/", views.AdminUserDetailView.as_view(), name="user-detail"
+    ),
     path(
         "users/<uuid:user_id>/suspend/",
         views.AdminUserSuspendView.as_view(),

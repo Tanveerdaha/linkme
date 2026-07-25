@@ -49,7 +49,11 @@ class BlockedUser(models.Model):
 
     def clean(self):
         super().clean()
-        if self.blocker_id and self.blocked_user_id and self.blocker_id == self.blocked_user_id:
+        if (
+            self.blocker_id
+            and self.blocked_user_id
+            and self.blocker_id == self.blocked_user_id
+        ):
             raise ValidationError(_("You cannot block yourself."))
 
 

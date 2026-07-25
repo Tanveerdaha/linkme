@@ -73,7 +73,9 @@ class Reaction(models.Model):
         ]
 
     def __str__(self) -> str:
-        target = f"post={self.post_id}" if self.post_id else f"comment={self.comment_id}"
+        target = (
+            f"post={self.post_id}" if self.post_id else f"comment={self.comment_id}"
+        )
         return f"Reaction({self.reaction_type}, {target}, user={self.user_id})"
 
     def clean(self):

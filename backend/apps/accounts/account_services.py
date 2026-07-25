@@ -94,6 +94,4 @@ def request_data_export(*, user) -> DataExportRequest:
 
 
 def get_latest_export(*, user) -> DataExportRequest | None:
-    return (
-        DataExportRequest.objects.filter(user=user).order_by("-created_at").first()
-    )
+    return DataExportRequest.objects.filter(user=user).order_by("-created_at").first()

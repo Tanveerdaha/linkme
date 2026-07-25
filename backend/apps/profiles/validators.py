@@ -13,7 +13,9 @@ ALLOWED_IMAGE_MIMES = {"image/jpeg", "image/png", "image/webp"}
 def validate_image_size(file_obj) -> None:
     """Reject uploaded images larger than 5 MB and verify type/signature."""
     filename = getattr(file_obj, "name", "") or ""
-    content_type = (getattr(file_obj, "content_type", "") or "").split(";")[0].strip().lower()
+    content_type = (
+        (getattr(file_obj, "content_type", "") or "").split(";")[0].strip().lower()
+    )
     size = getattr(file_obj, "size", None)
 
     ext = filename.rsplit(".", 1)[-1].lower() if "." in filename else ""

@@ -55,9 +55,7 @@ class ConnectionStatusView(APIView):
         summary="Get connection status with a user",
     )
     def get(self, request, username: str):
-        payload = services.get_connection_status(
-            viewer=request.user, username=username
-        )
+        payload = services.get_connection_status(viewer=request.user, username=username)
         return Response(payload)
 
 
@@ -98,9 +96,7 @@ class AcceptConnectionRequestView(APIView):
         summary="Accept a connection request",
     )
     def post(self, request, request_id):
-        services.accept_connection_request(
-            connection_id=request_id, actor=request.user
-        )
+        services.accept_connection_request(connection_id=request_id, actor=request.user)
         return Response({"status": "CONNECTED", "can_connect": False})
 
 
@@ -115,9 +111,7 @@ class RejectConnectionRequestView(APIView):
         summary="Reject a connection request",
     )
     def post(self, request, request_id):
-        services.reject_connection_request(
-            connection_id=request_id, actor=request.user
-        )
+        services.reject_connection_request(connection_id=request_id, actor=request.user)
         return Response({"status": "NONE", "can_connect": True})
 
 
@@ -132,9 +126,7 @@ class CancelConnectionRequestView(APIView):
         summary="Cancel a sent connection request",
     )
     def delete(self, request, request_id):
-        services.cancel_connection_request(
-            connection_id=request_id, actor=request.user
-        )
+        services.cancel_connection_request(connection_id=request_id, actor=request.user)
         return Response({"status": "NONE", "can_connect": True})
 
 
@@ -181,9 +173,7 @@ class ConnectionListView(APIView):
 
         paginator = self.pagination_class()
         page = paginator.paginate_queryset(qs, request, view=self)
-        results = [
-            _serialize_connection_partner(conn, user, request) for conn in page
-        ]
+        results = [_serialize_connection_partner(conn, user, request) for conn in page]
         return paginator.get_paginated_response(results)
 
 
@@ -289,9 +279,7 @@ class MutualConnectionsView(APIView):
             is_active=True,
             is_verified=True,
         )
-        profiles = selectors.get_mutual_connections(
-            user1=request.user, user2=other
-        )
+        profiles = selectors.get_mutual_connections(user1=request.user, user2=other)
         return Response(
             {
                 "count": len(profiles),

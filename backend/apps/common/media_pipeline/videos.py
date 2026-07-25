@@ -16,7 +16,9 @@ VIDEO_LADDER = (
 )
 
 
-def extract_thumbnail(video_path: Path, thumb_path: Path, *, seek_seconds: float = 1.0) -> None:
+def extract_thumbnail(
+    video_path: Path, thumb_path: Path, *, seek_seconds: float = 1.0
+) -> None:
     """Generate a JPEG thumbnail from a video file."""
     try:
         subprocess.run(
@@ -38,7 +40,9 @@ def extract_thumbnail(video_path: Path, thumb_path: Path, *, seek_seconds: float
             timeout=120,
         )
     except FileNotFoundError as exc:
-        raise RuntimeError("FFmpeg is required for video thumbnail generation.") from exc
+        raise RuntimeError(
+            "FFmpeg is required for video thumbnail generation."
+        ) from exc
     except subprocess.CalledProcessError:
         subprocess.run(
             [

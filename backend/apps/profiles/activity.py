@@ -11,7 +11,9 @@ from apps.reactions.models import Reaction
 ACTIVITY_LIMIT_DEFAULT = 30
 
 
-def get_user_activity(*, user, viewer=None, limit: int = ACTIVITY_LIMIT_DEFAULT) -> list[dict]:
+def get_user_activity(
+    *, user, viewer=None, limit: int = ACTIVITY_LIMIT_DEFAULT
+) -> list[dict]:
     """
     Build a merged activity feed for a user.
 
@@ -19,9 +21,7 @@ def get_user_activity(*, user, viewer=None, limit: int = ACTIVITY_LIMIT_DEFAULT)
     Respects post visibility for non-owner viewers.
     """
     is_owner = bool(
-        viewer
-        and getattr(viewer, "is_authenticated", False)
-        and viewer.id == user.id
+        viewer and getattr(viewer, "is_authenticated", False) and viewer.id == user.id
     )
 
     posts_qs = Post.objects.filter(

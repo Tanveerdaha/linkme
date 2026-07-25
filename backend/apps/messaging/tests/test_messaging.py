@@ -7,7 +7,12 @@ from rest_framework import status
 from rest_framework.test import APIClient
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from apps.messaging.models import Conversation, ConversationMember, Message, MessageStatus
+from apps.messaging.models import (
+    Conversation,
+    ConversationMember,
+    Message,
+    MessageStatus,
+)
 from apps.network.models import Connection
 
 User = get_user_model()
@@ -74,9 +79,7 @@ def _auth(client, user):
 
 def test_create_conversation(api_client, user_a, user_b, connected):
     _auth(api_client, user_a)
-    response = api_client.post(
-        "/api/v1/messages/conversations/", {"username": "ahmed"}
-    )
+    response = api_client.post("/api/v1/messages/conversations/", {"username": "ahmed"})
     assert response.status_code == status.HTTP_201_CREATED
     assert response.data["participant"]["username"] == "ahmed"
     assert Conversation.objects.count() == 1
@@ -85,12 +88,8 @@ def test_create_conversation(api_client, user_a, user_b, connected):
 
 def test_existing_conversation_returned(api_client, user_a, user_b, connected):
     _auth(api_client, user_a)
-    first = api_client.post(
-        "/api/v1/messages/conversations/", {"username": "ahmed"}
-    )
-    second = api_client.post(
-        "/api/v1/messages/conversations/", {"username": "ahmed"}
-    )
+    first = api_client.post("/api/v1/messages/conversations/", {"username": "ahmed"})
+    second = api_client.post("/api/v1/messages/conversations/", {"username": "ahmed"})
     assert first.status_code == status.HTTP_201_CREATED
     assert second.status_code == status.HTTP_200_OK
     assert first.data["id"] == second.data["id"]
@@ -99,9 +98,7 @@ def test_existing_conversation_returned(api_client, user_a, user_b, connected):
 
 def test_non_connected_users_blocked(api_client, user_a, user_c):
     _auth(api_client, user_a)
-    response = api_client.post(
-        "/api/v1/messages/conversations/", {"username": "john"}
-    )
+    response = api_client.post("/api/v1/messages/conversations/", {"username": "john"})
     assert response.status_code == status.HTTP_403_FORBIDDEN
     assert Conversation.objects.count() == 0
 
@@ -111,17 +108,13 @@ def test_pending_connection_blocked(api_client, user_a, user_b):
         sender=user_a, receiver=user_b, status=Connection.Status.PENDING
     )
     _auth(api_client, user_a)
-    response = api_client.post(
-        "/api/v1/messages/conversations/", {"username": "ahmed"}
-    )
+    response = api_client.post("/api/v1/messages/conversations/", {"username": "ahmed"})
     assert response.status_code == status.HTTP_403_FORBIDDEN
 
 
 def test_conversation_permissions(api_client, user_a, user_b, user_c, connected):
     _auth(api_client, user_a)
-    created = api_client.post(
-        "/api/v1/messages/conversations/", {"username": "ahmed"}
-    )
+    created = api_client.post("/api/v1/messages/conversations/", {"username": "ahmed"})
     conv_id = created.data["id"]
 
     _auth(api_client, user_c)
@@ -142,9 +135,7 @@ def test_send_message(api_client, user_a, user_b, connected):
     assert response.data["content"] == "Hello!"
     assert response.data["sender"] == "ali"
     assert Message.objects.count() == 1
-    assert MessageStatus.objects.filter(
-        status=MessageStatus.Status.SENT
-    ).exists()
+    assert MessageStatus.objects.filter(status=MessageStatus.Status.SENT).exists()
 
 
 def test_cannot_send_without_connection(api_client, user_a, user_b, connected):
@@ -153,9 +144,9 @@ def test_cannot_send_without_connection(api_client, user_a, user_b, connected):
         "/api/v1/messages/conversations/", {"username": "ahmed"}
     ).data
     # Remove connection
-    Connection.objects.filter(
-        sender=user_a, receiver=user_b
-    ).update(status=Connection.Status.REMOVED)
+    Connection.objects.filter(sender=user_a, receiver=user_b).update(
+        status=Connection.Status.REMOVED
+    )
 
     response = api_client.post(
         f"/api/v1/messages/conversations/{conv['id']}/messages/",
@@ -205,9 +196,7 @@ def test_message_history(api_client, user_a, user_b, connected):
             f"/api/v1/messages/conversations/{conv['id']}/messages/",
             {"content": f"msg {i}"},
         )
-    response = api_client.get(
-        f"/api/v1/messages/conversations/{conv['id']}/messages/"
-    )
+    response = api_client.get(f"/api/v1/messages/conversations/{conv['id']}/messages/")
     assert response.status_code == status.HTTP_200_OK
     assert len(response.data["results"]) == 3
 

@@ -21,15 +21,11 @@ def _message_should_notify(*, recipient, conversation_id) -> bool:
 def on_message_created(sender, message, conversation, sender_user, **kwargs):
     from apps.messaging import selectors
 
-    other = selectors.get_other_member(
-        conversation=conversation, viewer=sender_user
-    )
+    other = selectors.get_other_member(conversation=conversation, viewer=sender_user)
     if other is None:
         return
     recipient = other.user
-    if not _message_should_notify(
-        recipient=recipient, conversation_id=conversation.id
-    ):
+    if not _message_should_notify(recipient=recipient, conversation_id=conversation.id):
         return
     enqueue_notification(
         recipient=recipient,

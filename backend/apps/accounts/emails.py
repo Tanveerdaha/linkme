@@ -6,7 +6,10 @@ from urllib.parse import quote
 from django.conf import settings
 from django.core.mail import send_mail
 
-from apps.accounts.tokens import make_email_verification_token, make_password_reset_token
+from apps.accounts.tokens import (
+    make_email_verification_token,
+    make_password_reset_token,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -16,7 +19,9 @@ def _frontend_url(path: str) -> str:
     return f"{base}{path}"
 
 
-def _send_account_email(*, subject: str, message: str, recipient: str, purpose: str) -> None:
+def _send_account_email(
+    *, subject: str, message: str, recipient: str, purpose: str
+) -> None:
     """Send a transactional email and log success/failure without leaking secrets."""
     logger.info(
         "Sending %s email to %s via %s",
@@ -34,7 +39,11 @@ def _send_account_email(*, subject: str, message: str, recipient: str, purpose: 
         )
         logger.info("%s email send result for %s: %s", purpose, recipient, sent)
         if not sent:
-            logger.error("%s email was not accepted by the mail backend for %s", purpose, recipient)
+            logger.error(
+                "%s email was not accepted by the mail backend for %s",
+                purpose,
+                recipient,
+            )
     except Exception:
         logger.exception("Failed to send %s email to %s", purpose, recipient)
         raise

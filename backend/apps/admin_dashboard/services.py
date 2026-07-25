@@ -176,7 +176,11 @@ def soft_delete_user(*, actor, user_id, reason: str = "") -> User:
         action=AuditLog.Action.ACCOUNT_DELETE,
         object_type="user",
         object_id=str(user.id),
-        metadata={"action": "ADMIN_DELETE", "reason": reason, "username": user.username},
+        metadata={
+            "action": "ADMIN_DELETE",
+            "reason": reason,
+            "username": user.username,
+        },
     )
     return user
 
@@ -296,7 +300,9 @@ def update_report(*, actor, report_id, status: str, note: str = "") -> Report:
 
 
 @transaction.atomic
-def request_export(*, actor, export_type: str, format: str = "CSV", filters: dict | None = None):
+def request_export(
+    *, actor, export_type: str, format: str = "CSV", filters: dict | None = None
+):
     if not user_has_admin_permission(actor, AdminPermissionCode.EXPORT_DATA):
         raise PermissionDenied("Missing EXPORT_DATA permission.")
 

@@ -84,7 +84,9 @@ class AdminUserListView(APIView):
         qs = selectors.list_users(params=request.query_params)
         paginator = AdminPagination()
         page = paginator.paginate_queryset(qs, request, view=self)
-        data = AdminUserListSerializer(page, many=True, context={"request": request}).data
+        data = AdminUserListSerializer(
+            page, many=True, context={"request": request}
+        ).data
         return paginator.get_paginated_response(data)
 
 
@@ -270,7 +272,11 @@ class AdminReportDetailView(APIView):
         ).data
         return Response(data)
 
-    @extend_schema(request=UpdateReportSerializer, responses={200: AdminReportSerializer}, tags=["admin"])
+    @extend_schema(
+        request=UpdateReportSerializer,
+        responses={200: AdminReportSerializer},
+        tags=["admin"],
+    )
     def patch(self, request, report_id):
         serializer = UpdateReportSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -315,7 +321,9 @@ class AdminModerationActionView(APIView):
     permission_classes = [IsAdminUser, HasAdminPermission]
     required_admin_permission = AdminPermissionCode.TAKE_MODERATION_ACTION
 
-    @extend_schema(request=ModerationActionSerializer, responses={201: dict}, tags=["admin"])
+    @extend_schema(
+        request=ModerationActionSerializer, responses={201: dict}, tags=["admin"]
+    )
     def post(self, request):
         serializer = ModerationActionSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -385,10 +393,9 @@ class AdminExportView(APIView):
                     "error_message": export.error_message or None,
                 }
             )
-        latest = (
-            AdminExportRequest.objects.filter(requested_by=request.user)
-            .order_by("-created_at")[:10]
-        )
+        latest = AdminExportRequest.objects.filter(requested_by=request.user).order_by(
+            "-created_at"
+        )[:10]
         return Response(
             {
                 "results": [
@@ -408,10 +415,18 @@ class AdminExportView(APIView):
 class AdminMeView(APIView):
     permission_classes = [IsAdminUser]
 
-    @extend_schema(responses={200: dict}, tags=["admin"], summary="Current admin profile")
+    @extend_schema(
+        responses={200: dict}, tags=["admin"], summary="Current admin profile"
+    )
     def get(self, request):
-        from apps.admin_dashboard.permissions import get_admin_role, user_has_admin_permission
-        from apps.admin_dashboard.models import AdminPermissionCode, ROLE_DEFAULT_PERMISSIONS
+        from apps.admin_dashboard.permissions import (
+            get_admin_role,
+            user_has_admin_permission,
+        )
+        from apps.admin_dashboard.models import (
+            AdminPermissionCode,
+            ROLE_DEFAULT_PERMISSIONS,
+        )
         from apps.admin_dashboard.models import AdminRole
 
         role = get_admin_role(request.user)
@@ -422,7 +437,9 @@ class AdminMeView(APIView):
             permissions = list(AdminPermissionCode.ALL)
             role_name = "SUPER_ADMIN"
         else:
-            permissions = list(ROLE_DEFAULT_PERMISSIONS.get(AdminRole.Role.MODERATOR, []))
+            permissions = list(
+                ROLE_DEFAULT_PERMISSIONS.get(AdminRole.Role.MODERATOR, [])
+            )
             role_name = "MODERATOR"
 
         return Response(
@@ -457,5 +474,9 @@ class AdminAssignRoleView(APIView):
             actor=request.user,
         )
         return Response(
-            {"username": user.username, "role": role.role, "permissions": role.permissions}
+            {
+                "username": user.username,
+                "role": role.role,
+                "permissions": role.permissions,
+            }
         )

@@ -109,11 +109,9 @@ def send_connection_request(*, sender, username: str, message: str = "") -> Conn
             {"detail": "A connection request already exists."}
         ) from exc
 
-    connection = (
-        Connection.objects.select_related(
-            "sender", "receiver", "sender__profile", "receiver__profile"
-        ).get(pk=connection.pk)
-    )
+    connection = Connection.objects.select_related(
+        "sender", "receiver", "sender__profile", "receiver__profile"
+    ).get(pk=connection.pk)
     from apps.notifications.signals import notify_connection_request
 
     notify_connection_request(actor=sender, connection=connection)

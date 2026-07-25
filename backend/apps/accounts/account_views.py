@@ -125,7 +125,9 @@ class AccountStatusView(APIView):
                 "is_verified": user.is_verified,
                 "is_suspended": user.is_currently_suspended(),
                 "suspended_until": user.suspended_until,
-                "suspension_reason": user.suspension_reason if user.is_suspended else "",
+                "suspension_reason": (
+                    user.suspension_reason if user.is_suspended else ""
+                ),
                 "is_deleted": user.is_deleted,
                 "is_staff": user.is_staff,
             }

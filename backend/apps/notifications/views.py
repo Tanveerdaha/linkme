@@ -56,9 +56,7 @@ class NotificationListView(APIView):
 
         paginator = self.pagination_class()
         page = paginator.paginate_queryset(qs, request, view=self)
-        results = [
-            serialize_notification(n, request=request) for n in page
-        ]
+        results = [serialize_notification(n, request=request) for n in page]
         return paginator.get_paginated_response(results)
 
 
@@ -87,12 +85,9 @@ class MarkNotificationReadView(APIView):
         summary="Mark a notification as read",
     )
     def patch(self, request, notification_id):
-        note = services.mark_as_read(
-            notification_id=notification_id, user=request.user
-        )
-        note = (
-            Notification.objects.select_related("sender", "sender__profile")
-            .get(pk=note.pk)
+        note = services.mark_as_read(notification_id=notification_id, user=request.user)
+        note = Notification.objects.select_related("sender", "sender__profile").get(
+            pk=note.pk
         )
         return Response(serialize_notification(note, request=request))
 
@@ -123,9 +118,7 @@ class NotificationDeleteView(APIView):
         summary="Delete a notification",
     )
     def delete(self, request, notification_id):
-        services.delete_notification(
-            notification_id=notification_id, user=request.user
-        )
+        services.delete_notification(notification_id=notification_id, user=request.user)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
@@ -157,9 +150,7 @@ class NotificationPreferencesView(APIView):
         summary="Update notification preferences",
     )
     def patch(self, request):
-        serializer = NotificationPreferenceSerializer(
-            data=request.data, partial=True
-        )
+        serializer = NotificationPreferenceSerializer(data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         prefs = update_preferences(user=request.user, **serializer.validated_data)
         return Response(

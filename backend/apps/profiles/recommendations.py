@@ -49,8 +49,6 @@ def get_suggested_users(*, viewer=None, limit: int = 10) -> QuerySet:
         qs = qs.exclude(user_id=viewer.id)
 
     # Prefer profiles that look complete.
-    qs = qs.filter(
-        Q(avatar__isnull=False) | Q(headline__gt="") | Q(bio__gt="")
-    )
+    qs = qs.filter(Q(avatar__isnull=False) | Q(headline__gt="") | Q(bio__gt=""))
 
     return qs[:limit]

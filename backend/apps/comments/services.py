@@ -121,9 +121,7 @@ def reply_to_comment(*, comment_id, author, content: str) -> Comment:
     )
     reply.save()
     result = annotate_comments_with_engagement(
-        Comment.objects.select_related("author", "author__profile").filter(
-            pk=reply.pk
-        ),
+        Comment.objects.select_related("author", "author__profile").filter(pk=reply.pk),
         viewer=author,
     ).get()
 

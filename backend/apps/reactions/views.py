@@ -36,9 +36,7 @@ class PostReactionView(APIView):
         result = services.add_post_reaction(
             post_id=post_id,
             user=request.user,
-            reaction_type=serializer.validated_data.get(
-                "reaction_type", "HEART"
-            ),
+            reaction_type=serializer.validated_data.get("reaction_type", "HEART"),
         )
         return Response(result, status=status.HTTP_200_OK)
 
@@ -90,9 +88,7 @@ class CommentReactionView(APIView):
         result = services.add_comment_reaction(
             comment_id=comment_id,
             user=request.user,
-            reaction_type=serializer.validated_data.get(
-                "reaction_type", "HEART"
-            ),
+            reaction_type=serializer.validated_data.get("reaction_type", "HEART"),
         )
         return Response(result, status=status.HTTP_200_OK)
 

@@ -1,0 +1,134 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: linkme-postgres
+    environment:
+      POSTGRES_DB: linkme_db
+      POSTGRES_USER: linkme
+      POSTGRES_PASSWORD: linkme_secret
+    # Host port omitted by default — reach Postgres via the Docker network.
+    # Uncomment to expose locally: "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U linkme -d linkme_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - linkme-network
+
+  redis:
+    # Redis Stack includes RedisBloom (BF.ADD / BF.EXISTS) for username checks.
+    image: redis/redis-stack-server:7.4.0-v3
+    container_name: linkme-redis
+    # Host port omitted by default — reach Redis via the Docker network.
+    # Uncomment to expose locally: "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks:
+      - linkme-network
+
+  backend:
+    build:
+      context: ./backend
+    container_name: linkme-backend
+    env_file:
+      - ./backend/.env
+    environment:
+      DATABASE_HOST: postgres
+      REDIS_URL: redis://redis:6379/0
+      ENVIRONMENT: development
+    ports:
+      - "8001:8000"
+    volumes:
+      - ./backend:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: ["daphne", "-b", "0.0.0.0", "-p", "8000", "config.asgi:application"]
+    networks:
+      - linkme-network
+
+  celery:
+    build:
+      context: ./backend
+    container_name: linkme-celery
+    env_file:
+      - ./backend/.env
+    environment:
+      DATABASE_HOST: postgres
+      REDIS_URL: redis://redis:6379/0
+      ENVIRONMENT: development
+    volumes:
+      - ./backend:/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      backend:
+        condition: service_started
+    command:
+      [
+        "celery",
+        "-A",
+        "config",
+        "worker",
+        "-Q",
+        "default,media_processing,notifications,exports,cleanup",
+        "--loglevel=info",
+      ]
+    networks:
+      - linkme-network
+
+  celery_beat:
+    build:
+      context: ./backend
+    container_name: linkme-celery-beat
+    env_file:
+      - ./backend/.env
+    environment:
+      DATABASE_HOST: postgres
+      REDIS_URL: redis://redis:6379/0
+      ENVIRONMENT: development
+    volumes:
+      - ./backend:/app
+    depends_on:
+      redis:
+        condition: service_healthy
+      backend:
+        condition: service_started
+    command: ["celery", "-A", "config", "beat", "--loglevel=info"]
+    networks:
+      - linkme-network
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:8001/api/v1
+        NEXT_PUBLIC_WS_URL: ws://localhost:8001
+    container_name: linkme-frontend
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8001/api/v1
+      NEXT_PUBLIC_WS_URL: ws://localhost:8001
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - linkme-network
+
+volumes:
+  postgres_data:
+
+networks:
+  linkme-network:
+    driver: bridge
+    name: linkme-network

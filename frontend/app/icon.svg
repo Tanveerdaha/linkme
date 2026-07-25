@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="LinkMe">
+  <defs>
+    <linearGradient id="lm-bg" x1="4" y1="2" x2="28" y2="30" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#12946f"/>
+      <stop offset="1" stop-color="#0a5f4a"/>
+    </linearGradient>
+  </defs>
+  <rect width="32" height="32" rx="8" fill="url(#lm-bg)"/>
+  <!-- Two linked nodes — network / connection mark -->
+  <circle cx="11.5" cy="11.5" r="3.6" fill="#f3fbf8"/>
+  <circle cx="20.5" cy="20.5" r="3.6" fill="#f3fbf8"/>
+  <path
+    d="M14.1 14.1 17.9 17.9"
+    fill="none"
+    stroke="#f3fbf8"
+    stroke-width="2.6"
+    stroke-linecap="round"
+  />
+</svg>

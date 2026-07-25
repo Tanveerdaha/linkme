@@ -267,6 +267,8 @@ def request_phone_otp(*, phone_number: str) -> dict:
     """
     Validate phone, generate a 6-digit OTP, send via WhatsApp, and store hash.
     """
+    from django.core.exceptions import ValidationError as DjangoValidationError
+
     from apps.accounts.phone import validate_phone_number
     from apps.accounts.phone_otp import (
         RESEND_COOLDOWN_SECONDS,
@@ -276,7 +278,6 @@ def request_phone_otp(*, phone_number: str) -> dict:
         store_otp,
     )
     from apps.accounts.whatsapp import send_whatsapp_message
-    from django.core.exceptions import ValidationError as DjangoValidationError
 
     try:
         phone = validate_phone_number(phone_number)
@@ -314,9 +315,10 @@ def request_phone_otp(*, phone_number: str) -> dict:
 @transaction.atomic
 def verify_phone_otp(*, phone_number: str, code: str) -> User:
     """Verify OTP and login or create a phone-authenticated LinkMe user."""
+    from django.core.exceptions import ValidationError as DjangoValidationError
+
     from apps.accounts.phone import validate_phone_number
     from apps.accounts.phone_otp import verify_otp
-    from django.core.exceptions import ValidationError as DjangoValidationError
 
     try:
         phone = validate_phone_number(phone_number)

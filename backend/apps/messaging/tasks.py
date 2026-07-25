@@ -1,8 +1,7 @@
 """Celery tasks for messaging (presence cleanup hooks)."""
 
-from celery import shared_task
-
 from apps.messaging import presence
+from celery import shared_task
 
 
 @shared_task(name="messaging.refresh_presence")

@@ -4,17 +4,19 @@ import csv
 import io
 import json
 
-from celery import shared_task
 from django.core.files.base import ContentFile
 from django.utils import timezone
+
+from celery import shared_task
 
 
 @shared_task(name="admin_dashboard.generate_admin_export", queue="exports")
 def generate_admin_export(export_id: str) -> str:
-    from apps.admin_dashboard.models import AdminExportRequest
-    from apps.admin_dashboard import selectors
-    from apps.moderation.models import AuditLog, ModerationAction, Report
     from django.contrib.auth import get_user_model
+
+    from apps.admin_dashboard import selectors
+    from apps.admin_dashboard.models import AdminExportRequest
+    from apps.moderation.models import AuditLog, ModerationAction, Report
 
     User = get_user_model()
 

@@ -7,9 +7,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from apps.network import recommendations
-from apps.network import selectors
-from apps.network import services
+from apps.network import recommendations, selectors, services
 from apps.network.pagination import ConnectionPagination
 from apps.network.permissions import IsNetworkUser
 from apps.network.serializers import (

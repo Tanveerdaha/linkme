@@ -12,11 +12,7 @@ from rest_framework.views import APIView
 from apps.posts import services
 from apps.posts.models import Post
 from apps.posts.pagination import PostCursorPagination
-from apps.posts.permissions import (
-    CanViewPost,
-    IsAuthenticatedVerified,
-    IsPostOwner,
-)
+from apps.posts.permissions import CanViewPost, IsAuthenticatedVerified, IsPostOwner
 from apps.posts.serializers import (
     PostCreateSerializer,
     PostSerializer,

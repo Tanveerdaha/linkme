@@ -1,8 +1,9 @@
 """Suggested users foundation (non-AI heuristics)."""
 
+from datetime import timedelta
+
 from django.db.models import Count, Q, QuerySet
 from django.utils import timezone
-from datetime import timedelta
 
 from apps.posts.models import Post
 from apps.profiles.models import Profile

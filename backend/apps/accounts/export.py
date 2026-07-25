@@ -151,8 +151,9 @@ def _export_message_metadata(user) -> list:
 
 
 def _export_connections(user) -> list:
-    from apps.network.models import Connection
     from django.db.models import Q
+
+    from apps.network.models import Connection
 
     connections = Connection.objects.filter(
         Q(sender=user) | Q(receiver=user),

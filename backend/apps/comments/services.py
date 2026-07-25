@@ -9,7 +9,6 @@ from apps.posts.models import Post
 from apps.posts.services import get_visible_post
 from apps.reactions.services import annotate_comments_with_engagement
 
-
 MAX_COMMENT_LENGTH = 2000
 DELETED_PLACEHOLDER = "[deleted]"
 

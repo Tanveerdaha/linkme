@@ -419,15 +419,15 @@ class AdminMeView(APIView):
         responses={200: dict}, tags=["admin"], summary="Current admin profile"
     )
     def get(self, request):
+        from apps.admin_dashboard.models import (
+            ROLE_DEFAULT_PERMISSIONS,
+            AdminPermissionCode,
+            AdminRole,
+        )
         from apps.admin_dashboard.permissions import (
             get_admin_role,
             user_has_admin_permission,
         )
-        from apps.admin_dashboard.models import (
-            AdminPermissionCode,
-            ROLE_DEFAULT_PERMISSIONS,
-        )
-        from apps.admin_dashboard.models import AdminRole
 
         role = get_admin_role(request.user)
         if role:

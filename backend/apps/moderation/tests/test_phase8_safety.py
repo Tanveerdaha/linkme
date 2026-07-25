@@ -349,8 +349,9 @@ def test_unauthorized_access_blocked(api_client):
 
 
 def test_upload_validation_rejects_bad_extension(api_client, user_a):
-    from apps.media.validators import validate_media_file
     from django.core.exceptions import ValidationError
+
+    from apps.media.validators import validate_media_file
 
     bad = SimpleUploadedFile(
         "malware.exe", b"MZ\x90\x00", content_type="application/octet-stream"

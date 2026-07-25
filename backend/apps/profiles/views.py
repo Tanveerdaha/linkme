@@ -8,8 +8,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from apps.profiles import activity as activity_svc
-from apps.profiles import media_gallery
-from apps.profiles import recommendations
+from apps.profiles import media_gallery, recommendations
 from apps.profiles import search as search_svc
 from apps.profiles import services
 from apps.profiles.pagination import UserSearchPagination

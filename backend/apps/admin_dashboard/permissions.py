@@ -3,9 +3,9 @@
 from rest_framework.permissions import BasePermission
 
 from apps.admin_dashboard.models import (
+    ROLE_DEFAULT_PERMISSIONS,
     AdminPermissionCode,
     AdminRole,
-    ROLE_DEFAULT_PERMISSIONS,
 )
 
 

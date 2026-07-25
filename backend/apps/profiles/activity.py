@@ -7,7 +7,6 @@ from apps.comments.models import Comment
 from apps.posts.models import Post
 from apps.reactions.models import Reaction
 
-
 ACTIVITY_LIMIT_DEFAULT = 30
 
 

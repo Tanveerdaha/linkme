@@ -39,8 +39,8 @@ htmlcov/
 .tox/
 .nox/
 
-# Django
-media/
+# Django — uploaded files only (do NOT ignore apps/media)
+backend/media/
 staticfiles/
 local_settings.py
 db.sqlite3

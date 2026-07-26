@@ -54,7 +54,7 @@ jobs:
       DATABASE_PORT: "5432"
       REDIS_URL: redis://localhost:6379/0
       REDIS_BLOOM_ENABLED: "true"
-      CORS_ALLOWED_ORIGINS: http://localhost:3000
+      CORS_ALLOWED_ORIGINS: http://localhost:8014
 
     steps:
       - uses: actions/checkout@v4

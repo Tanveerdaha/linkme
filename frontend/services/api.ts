@@ -7,7 +7,7 @@ import { useAuthStore } from "@/stores/authStore";
  * Base URL comes from NEXT_PUBLIC_API_URL (see .env.example).
  */
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1",
+  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:8013/api/v1",
   headers: {
     "Content-Type": "application/json",
   },

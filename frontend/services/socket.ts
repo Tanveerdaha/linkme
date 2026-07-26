@@ -5,9 +5,9 @@
 type EventHandler = (payload: Record<string, unknown>) => void;
 
 export function defaultWsBase(): string {
-  if (typeof window === "undefined") return "ws://localhost:8000";
+  if (typeof window === "undefined") return "ws://localhost:8013";
   if (process.env.NEXT_PUBLIC_WS_URL) return process.env.NEXT_PUBLIC_WS_URL;
-  const api = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api/v1";
+  const api = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8013/api/v1";
   try {
     const url = new URL(api);
     url.protocol = url.protocol === "https:" ? "wss:" : "ws:";
@@ -16,7 +16,7 @@ export function defaultWsBase(): string {
     url.hash = "";
     return url.toString().replace(/\/$/, "");
   } catch {
-    return "ws://localhost:8000";
+    return "ws://localhost:8013";
   }
 }
 

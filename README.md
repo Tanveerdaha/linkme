@@ -63,14 +63,16 @@ docker compose up --build -d
 
 | Service | URL |
 | --- | --- |
-| Frontend | http://localhost:3000 |
-| API | http://localhost:8001/api/v1 |
-| API health | http://localhost:8001/api/health/ |
-| Readiness | http://localhost:8001/api/readiness/ |
-| Liveness | http://localhost:8001/api/liveness/ |
-| Swagger | http://localhost:8001/api/docs/ |
+| Frontend | http://localhost:8014 |
+| API | http://localhost:8013/api/v1 |
+| API health | http://localhost:8013/api/health/ |
+| Readiness | http://localhost:8013/api/readiness/ |
+| Liveness | http://localhost:8013/api/liveness/ |
+| Swagger | http://localhost:8013/api/docs/ |
+| PostgreSQL | localhost:5435 |
+| Redis | localhost:6381 |
 
-> **Port note:** the API is published on **8001** (host) → 8000 (container) so it does not clash with other local services on 8000. The frontend is wired to `http://localhost:8001`.
+> **Port note:** API **8013** → 8000 (container), frontend **8014**, Postgres **5435** → 5432 (container), Redis **6381** → 6379 (container). Inside Compose, backend still reaches Postgres at `postgres:5432` and Redis at `redis:6379`.
 
 ### Useful commands
 
@@ -116,11 +118,11 @@ Requires local PostgreSQL + Redis, then:
 # Backend
 cd backend
 cp .env.example .env
-# Set DATABASE_HOST=localhost and REDIS_URL=redis://localhost:6379/0
+# Set DATABASE_HOST=localhost, DATABASE_PORT=5435, REDIS_URL=redis://localhost:6381/0
 pip install -r requirements/dev.txt
 python manage.py migrate
-python manage.py runserver 0.0.0.0:8001
-# or: daphne -b 0.0.0.0 -p 8001 config.asgi:application
+python manage.py runserver 0.0.0.0:8013
+# or: daphne -b 0.0.0.0 -p 8013 config.asgi:application
 
 # Celery (separate terminals) — required when NOTIFICATIONS_INLINE=false
 # Notifications, media processing, and exports run on these queues.

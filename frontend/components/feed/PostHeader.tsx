@@ -3,8 +3,10 @@
 import Link from "next/link";
 import { Globe, Lock, Users } from "lucide-react";
 
+import { PostOwnerMenu } from "@/components/feed/PostOwnerMenu";
 import { SafetyMenu } from "@/components/moderation/SafetyMenu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useAuthStore } from "@/stores/authStore";
 import type { Post, PostVisibility } from "@/types";
 
 function initials(name: string, username: string) {
@@ -43,11 +45,13 @@ type PostHeaderProps = {
 };
 
 export function PostHeader({ post }: PostHeaderProps) {
+  const currentUser = useAuthStore((s) => s.user);
   const { author, visibility, published_at, created_at } = post;
   const time = formatRelativeTime(published_at || created_at);
   const headline = (author.headline || "").trim();
   const { label, Icon } = visibilityLabel(visibility);
   const timestamp = published_at || created_at;
+  const isOwner = Boolean(currentUser?.username && currentUser.username === author.username);
 
   return (
     <div className="flex gap-3">
@@ -81,13 +85,17 @@ export function PostHeader({ post }: PostHeaderProps) {
               </span>
             </p>
           </div>
-          <SafetyMenu
-            contentType="POST"
-            objectId={String(post.id)}
-            username={author.username}
-            label={`this post by ${author.name}`}
-            showBlock
-          />
+          {isOwner ? (
+            <PostOwnerMenu post={post} />
+          ) : (
+            <SafetyMenu
+              contentType="POST"
+              objectId={String(post.id)}
+              username={author.username}
+              label={`this post by ${author.name}`}
+              showBlock
+            />
+          )}
         </div>
       </div>
     </div>
